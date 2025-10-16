@@ -1,0 +1,55 @@
+/* Variáveis para fácil personalização */
+:root {
+    --primary-color: #0d6efd; /* Azul Padrão do Bootstrap */
+    --secondary-color: #6c757d; 
+    --bg-color: #f0f2f5; /* Um cinza mais suave */
+    --card-color: #ffffff; 
+}
+
+/* Estilo do corpo e cabeçalho */
+body {
+    background-color: var(--bg-color);
+    padding-bottom: 50px; /* Espaço no final */
+}
+
+.main-title {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Estilo do Card (Formulário) */
+.game-form-card {
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+}
+
+.game-form-card h2 {
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+}
+
+/* Estilo do texto de porcentagem ao lado do slider */
+.output-percent {
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 50px; 
+    display: inline-block;
+    text-align: right;
+}
+
+/* Estilo para o botão de registro */
+.btn-submit-game {
+    font-weight: bold;
+}
+
+/* Responsividade: Ajustes para telas menores */
+@media (max-width: 768px) {
+    .table-responsive-sm {
+        font-size: 0.8rem;
+    }
+    .game-form-card {
+        padding: 20px;
+    }
+}
