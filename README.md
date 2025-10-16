@@ -21,28 +21,3 @@
 * **JavaScript (ES6):** Manipulação de dados, formulários e integração com `LocalStorage`.
 * **Bootstrap 5.3:** Framework CSS para responsividade e componentes (formulários, modais, tabelas e barras de progresso).
 
----
-
-## 🚀 Como Executar o Projeto Localmente
-
-É muito simples, já que o projeto é totalmente Front-end e não requer servidor!
-
-1.  **Clone ou Baixe o Repositório:**
-    ```bash
-    git clone [https://www.youtube.com/watch?v=6YQIWRyPxnk](https://www.youtube.com/watch?v=6YQIWRyPxnk)
-    ```
-
-2.  **Abra os Arquivos:**
-    Certifique-se de que os seguintes arquivos estejam na mesma pasta:
-    * `index.html`
-    * `styles.css`
-    * `script.js`
-
-3.  **Execute:**
-    Abra o arquivo `index.html` diretamente no seu navegador (clique duas vezes no arquivo).
-
-    > **Dica:** Se você usar a extensão "Live Server" no VS Code, o projeto será executado automaticamente e recarregará a página a cada alteração.
-
----
-
-## 📋 Estrutura de Arquivos
