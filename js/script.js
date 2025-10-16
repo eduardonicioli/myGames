@@ -3,14 +3,15 @@ const gameForm = document.getElementById('game-form');
 const gamesListBody = document.getElementById('games-list-body');
 const gamesModal = document.getElementById('gamesModal');
 
+// Elementos de Filtro (NOVOS)
+const filterNameInput = document.getElementById('filter-name');
+const filterPlatformSelect = document.getElementById('filter-platform');
+
 // Carrega os jogos do LocalStorage ou inicia uma array vazia
 let games = loadGames(); 
 
-// --- Funções de Manipulação de Dados (LocalStorage) ---
+// --- 1. Manipulação de Dados (LocalStorage) ---
 
-/**
- * Carrega a lista de jogos do LocalStorage.
- */
 function loadGames() {
     try {
         const storedGames = localStorage.getItem('gamesList');
@@ -21,21 +22,35 @@ function loadGames() {
     }
 }
 
-/**
- * Salva a lista de jogos no LocalStorage.
- */
 function saveGames() {
     localStorage.setItem('gamesList', JSON.stringify(games));
 }
 
-// --- Funções de Renderização (DOM) ---
+// --- 2. Lógica de Filtro (NOVO) ---
 
 /**
- * Gera o HTML para uma única linha da tabela, incluindo os botões de Ação.
- * @param {Object} game - O objeto do jogo.
- * @param {number} index - O índice do jogo na array.
- * @returns {string} O HTML da linha (<tr>).
+ * Filtra a lista de jogos com base nos valores dos campos de busca.
+ * @returns {Array} A lista de jogos filtrada.
  */
+function getFilteredGames() {
+    const nameQuery = filterNameInput.value.toLowerCase();
+    const platformQuery = filterPlatformSelect.value;
+    
+    // Se não houver filtros, retorna a lista completa
+    if (!nameQuery && !platformQuery) {
+        return games;
+    }
+
+    return games.filter(game => {
+        const matchesName = nameQuery ? game.name.toLowerCase().includes(nameQuery) : true;
+        const matchesPlatform = platformQuery ? game.platform === platformQuery : true;
+
+        return matchesName && matchesPlatform;
+    });
+}
+
+// --- 3. Renderização da Lista e Ações ---
+
 function createGameRowHTML(game, index) {
     const progressColor = game.progress == 100 ? 'bg-success' : 'bg-warning text-dark';
     const progressLabel = `Progresso ${game.progress}%`;
@@ -65,34 +80,27 @@ function createGameRowHTML(game, index) {
 }
 
 /**
- * Renderiza a lista completa de jogos na tabela do modal.
+ * Renderiza a lista de jogos, usando a lista filtrada.
  */
 function renderGamesList() {
-    gamesListBody.innerHTML = ''; // Limpa o corpo da tabela
+    const listToRender = getFilteredGames(); // Usa a lista filtrada!
+    gamesListBody.innerHTML = '';
 
-    if (games.length === 0) {
-        gamesListBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Ainda não há jogos registrados.</td></tr>';
+    if (listToRender.length === 0) {
+        gamesListBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Nenhum jogo encontrado com os filtros atuais.</td></tr>';
         return;
     }
-
-    const rowsHTML = games.map(createGameRowHTML).join('');
+    
+    const rowsHTML = listToRender.map((game, index) => createGameRowHTML(game, games.indexOf(game))).join('');
     gamesListBody.innerHTML = rowsHTML;
 }
 
-// --- Funções de Ação ---
+// --- 4. Funções de Ação (Mantidas) ---
 
-/**
- * Permite ao usuário editar a porcentagem de progresso de um jogo.
- * Usamos um simples 'prompt' por enquanto para não introduzir outro modal.
- * @param {number} index - O índice do jogo a ser editado.
- */
 window.editGameProgress = function(index) {
     const game = games[index];
-    
-    // Solicita o novo valor de porcentagem ao usuário
     const newProgress = prompt(`Atualizar progresso de "${game.name}":\nInsira a nova porcentagem (0 a 100):`, game.progress);
 
-    // Validação da entrada
     if (newProgress !== null) {
         const progressValue = parseInt(newProgress);
         
@@ -101,37 +109,31 @@ window.editGameProgress = function(index) {
             return;
         }
 
-        // Atualiza o objeto, salva e renderiza
         game.progress = progressValue;
         saveGames();
-        renderGamesList();
+        renderGamesList(); // Renderiza com filtro aplicado
         
-        // Opcional: Efeito visual rápido para mostrar a linha atualizada
         const row = document.getElementById(`row-${index}`);
         if (row) {
-             row.style.backgroundColor = '#d4edda'; // Verde claro para sucesso
+             row.style.backgroundColor = '#d4edda';
              setTimeout(() => {
-                 row.style.backgroundColor = ''; // Remove o destaque após um tempo
+                 row.style.backgroundColor = ''; 
              }, 1000);
         }
     }
 }
 
-/**
- * Remove um jogo da lista e atualiza o estado.
- * @param {number} index - O índice do jogo a ser removido.
- */
 window.removeGame = function(index) {
     if (confirm(`Tem certeza que deseja remover o jogo "${games[index].name}"?`)) {
         games.splice(index, 1);
         saveGames();
-        renderGamesList();
+        renderGamesList(); // Renderiza com filtro aplicado
     }
 }
 
-// --- Event Listeners ---
+// --- 5. Event Listeners ---
 
-// 1. Envio do Formulário
+// 1. Envio do Formulário (Registro)
 gameForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -151,9 +153,19 @@ gameForm.addEventListener('submit', function(event) {
     gameForm.reset();
     document.getElementById('progress-output').value = '100%'; 
 
+    // Limpa os filtros ao registrar um novo jogo para evitar confusão
+    filterNameInput.value = '';
+    filterPlatformSelect.value = '';
+
     const modalInstance = bootstrap.Modal.getOrCreateInstance(gamesModal);
     modalInstance.show();
 });
 
-// 2. Abertura do Modal: Garante que a lista seja carregada sempre que o modal for exibido.
+// 2. Abertura do Modal: Renderiza a lista completa (sem filtros)
 gamesModal.addEventListener('show.bs.modal', renderGamesList);
+
+// 3. Aplicação dos Filtros (NOVOS EVENTOS)
+// Dispara a renderização sempre que o texto muda
+filterNameInput.addEventListener('input', renderGamesList);
+// Dispara a renderização sempre que a seleção muda
+filterPlatformSelect.addEventListener('change', renderGamesList);

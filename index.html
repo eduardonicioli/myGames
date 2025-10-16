@@ -95,8 +95,28 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+    
+                    <div class="row mb-4">
+                        
+                        <div class="col-md-7 mb-3 mb-md-0">
+                            <input type="text" class="form-control" id="filter-name" placeholder="Buscar por nome do Game...">
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <select id="filter-platform" class="form-select">
+                                <option value="">Filtrar por Plataforma (Todas)</option>
+                                <option value="PC">PC</option>
+                                <option value="PS5">PlayStation 5</option>
+                                <option value="PS4">PlayStation 4</option>
+                                <option value="XBSX">Xbox Series X/S</option>
+                                <option value="Switch">Nintendo Switch</option>
+                                <option value="Mobile">Mobile</option>
+                            </select>
+                        </div>
+                        
+                    </div>
                     <div class="table-responsive-sm">
-                        <table class="table table-striped table-hover align-middle" id="games-table">
+                        <table class="table table-striped table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th scope="col">#</th>
@@ -112,6 +132,7 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
